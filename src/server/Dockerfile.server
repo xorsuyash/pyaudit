@@ -1,0 +1,11 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY server.py .
+
+EXPOSE 5050
+
+ENV SERVER_ADDR=0.0.0.0
+
+CMD ["python", "server.py"]
