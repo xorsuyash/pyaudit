@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Signature Verification</title>
+</head>
+<body>
+    <h1>File Signature Verification</h1>
+    <form action="/verify" method="post" enctype="multipart/form-data">
+        <label for="file">File:</label>
+        <input type="file" id="file" name="file" required><br>
+        <label for="signature">Signature:</label>
+        <input type="file" id="signature" name="signature" required><br>
+        <label for="public_key">Public Key:</label>
+        <textarea id="public_key" name="public_key" rows="5" required></textarea><br>
+        <button type="submit">Verify Signature</button>
+    </form>
+</body>
+</html>
+

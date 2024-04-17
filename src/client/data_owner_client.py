@@ -1,7 +1,29 @@
 import socket 
 import os 
 
-SERVER_PORT=5050 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""SERVER_PORT=5050 
 HEADER= 64 
 FORMAT="utf-8"
 DISCONNECT="!Disconnect"
@@ -40,5 +62,5 @@ class DataOwnerClient:
     def update_acl(filename,acl):
         
         send(f"!acl {filename} {acl}")
-        print(f"Acess control list for '{filename}' updated: {acl}")
+        print(f"Acess control list for '{filename}' updated: {acl}")"""
 

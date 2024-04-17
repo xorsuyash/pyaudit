@@ -3,7 +3,12 @@ import threading
 import os 
 
 
-PORT=5050
+HOST=''
+
+
+
+
+"""PORT=5050
 HEADER=64 
 FORMAT="utf-8"
 SERVER=socket.gethostbyname(socket.gethostname())
@@ -115,4 +120,4 @@ def start():
 
 
 print("[STARTING] server is starting")
-start()
+start()"""
