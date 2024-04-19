@@ -51,3 +51,24 @@ def verify_signature(signature,data,public_key_path):
     except InvalidSignature:
         return False 
 
+if __name__=="__main__":
+     from encrypt import encrypt_data,decrypt_data
+     
+     data="hi i am suyash"
+     enc=encrypt_data(data.encode("utf-8"),"/home/suyash/pyaudit/src/server_configs/public_key.pem")
+     hash=generate_hash(enc)
+     sign=generate_signature(enc,"/home/suyash/pyaudit/src/client_cache/private_key.pem","suyash123@")
+     #data + signed hash bhej raha hoon 
+     print(verify_signature(sign,enc,"/home/suyash/pyaudit/src/client_configs/public_key.pem"))
+     
+     #sign the encrypted data
+
+     hash2=generate_hash(enc)
+
+     sign2=generate_signature(hash2,"/home/suyash/pyaudit/src/server_configs/private_key.pem","suyash123@")
+     print(verify_signature(sign2,hash,"/home/suyash/pyaudit/src/server_configs/public_key.pem"))
+     #h1=generate_hash(data.encode("utf-8"))
+     
+     #h2=generate_hash(data.encode("utf-8"))
+
+     #print(h1==h2)

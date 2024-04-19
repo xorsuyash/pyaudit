@@ -1,10 +1,11 @@
 from client_utils import generate_client_cache,generate_keys,generate_encrypted_data,create_signature
 from encryption.hash import verify_signature
+from encryption.hash import generate_hash
 import yaml 
-import socket 
-import threading 
+import socket  
 import os 
-import json 
+import shutil
+
 
 SERVER_LIST_PATH="/home/suyash/pyaudit/src/client_configs/hosts.yaml"
 SERVER_PUBKEY_PATH="/home/suyash/pyaudit/src/server_configs/public_key.pem"
@@ -16,12 +17,11 @@ def send_data_to_server(server_host,server_port,data):
     client_socket.connect((server_host,server_port))
 
     client_socket.sendall(str(data).encode())
-
+    
     #getting response from the server
     ack = client_socket.recv(4096)
-    ack = ack.decode()
-
-    return ack 
+    
+    return ack
 
 
 def _load_server_list(server_list_path):
@@ -63,6 +63,7 @@ def prepare_data_to_send(file_path,server_list,no_server,server_pubkey_path):
     
     #generating signatures 
     signature_dict={}
+    hash_dict={}
     
     concat_data_list=[]
     for file_list in file_metadata.values():
@@ -80,24 +81,26 @@ def prepare_data_to_send(file_path,server_list,no_server,server_pubkey_path):
     
     for i in range(len(concat_data_list)):
         data=concat_data_list[i]
+        hash_dict[file_names[i]]=generate_hash(data.encode("utf-8"))
         signature_dict[file_names[i]]=create_signature(data,private_key_path,password)
-
     
-    return file_metadata,encryption_dict,signature_dict,concat_data_list
+    return file_metadata,encryption_dict,signature_dict,hash_dict
 
 def main():
     
     while True:
         input_file_path=input("Enter The file to upload: ")
         server_list=_load_server_list(SERVER_LIST_PATH)
+        print(server_list)
         no_server=len(server_list)
 
         print("..........Preparing files to send...................😉")
-        file_metadata,encryption_dict,signature_dict,concat_data_list=prepare_data_to_send(input_file_path,server_list,no_server,SERVER_PUBKEY_PATH)
+        file_metadata,encryption_dict,signature_dict,hash_dict=prepare_data_to_send(input_file_path,server_list,no_server,SERVER_PUBKEY_PATH)
         file_names=[name for name in file_metadata.keys()]
         metadata_list=[data for data in file_metadata.values()]
         encryption_list=[enc for enc in encryption_dict.values()]
         signature_list=[sign for sign in signature_dict.values()]
+        hash_list=[hash for hash in hash_dict.values()]
         print("Files prepared.....😀") 
 
         print("..Sending files to the server..🛸")
@@ -114,104 +117,22 @@ def main():
             ack_list.append(ack)
         print("..Data sent to all servers waiting for acknowledgement..🧐")
 
-        flag_list=[]
-        for i in range(len(concat_data_list)):
-            flag_list.append(verify_signature(ack_list[i].encode("utf-8"),concat_data_list[i].encode("utf-8"),SERVER_PUBKEY_PATH))
         
-        print(flag_list)
+        flag=True
+        for i in range(len(hash_list)):
+            flag=flag and verify_signature(ack_list[i],hash_list[i],SERVER_PUBKEY_PATH)
         
-        """if flag:
+        
+        if flag:
             print("..Verification sucessfull..✅\n")
-            print("..Data uploaded sucess fully..✨✨\n")
+            print("..Data uploaded sucessfully..✨✨\n")
             print("..Deleting files from local..🗑️\n")
-            os.rmdir("client_configs")
+            shutil.rmtree("client_cache")
         else:
-            print("..something wrong please try resending..")"""
+            print("..something wrong please try resending..")
 
 
 if __name__=="__main__":
     main()
 
-        
-        
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""SERVER_PORT=5050 
-HEADER= 64 
-FORMAT="utf-8"
-DISCONNECT="!Disconnect"
-SERVER=socket.gethostbyname(socket.gethostname())
-
-
-
-client=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-client.connect((SERVER,SERVER_PORT))
-
-
-def send(msg):
-    message=msg.encode(FORMAT)
-    msg_length=len(message)
-    send_length=str(msg_length).encode(FORMAT)
-    send_length+=b' '*(HEADER-len(send_length))
-    client.send(send_length)
-    client.send(message)
-
-class DataOwnerClient:
-    @staticmethod
-    def upload_file(filepath):
-        filename=os.path.basename(filepath)
-        
-        send(f"!upload {filename}")
-
-        file_size=os.path.getsize(filepath)
-        send(str(file_size))
-
-        with open(filepath,'rb') as file:
-            file_data=file.read()
-            client.send(file_data)
-
-
-    @staticmethod
-    def update_acl(filename,acl):
-        
-        send(f"!acl {filename} {acl}")
-        print(f"Acess control list for '{filename}' updated: {acl}")"""
 

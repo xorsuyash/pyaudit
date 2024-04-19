@@ -27,7 +27,7 @@ def generate_keys():
     if not os.path.exists('client_configs'):
         os.makedirs('client_configs')
     
-    private_key_file_path=os.path.join('client_cache','private_key.pem')
+    private_key_file_path=os.path.join('client_configs','private_key.pem')
     public_key_file_path=os.path.join('client_configs','public_key.pem')
 
     password="suyash123@"

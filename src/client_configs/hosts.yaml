@@ -1,10 +1,11 @@
 ServerList:
   server1:
     host: 127.0.0.1
-    port: 51483
+    port: 38055
   server2:
     host: 127.0.0.1
-    port: 34967
+    port: 42303
   server3:
     host: 127.0.0.1
-    port: 48317
+    port: 43703
+  
