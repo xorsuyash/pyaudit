@@ -33,3 +33,5 @@ def generate_keys_and_save(private_key_path, public_key_path, password):
     with open(public_key_path, "wb") as f:
         f.write(public_key_pem)
 
+    return private_key_path,public_key_path
+

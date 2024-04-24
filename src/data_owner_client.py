@@ -19,7 +19,7 @@ def send_data_to_server(server_host,server_port,data):
     client_socket.sendall(str(data).encode())
     
     #getting response from the server
-    ack = client_socket.recv(4096)
+    ack = client_socket.recv(4096) 
     
     return ack
 
@@ -112,7 +112,8 @@ def main():
                 "encrypted_file":encryption_list[i],
                 "signed_hash":signature_list[i],
                 "folder_id":i,
-            }
+            } 
+            
             ack=send_data_to_server(server_host,server_port,data_to_send)
             ack_list.append(ack)
         print("..Data sent to all servers waiting for acknowledgement..🧐")

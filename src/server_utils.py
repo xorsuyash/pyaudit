@@ -17,5 +17,26 @@ def generate_keys():
 
     return private_key_file_path,public_key_file_path,password
 
+
+def build_tree(directory_path,indent=''):
+     
+    tree=""
+
+    if not os.path.isdir(directory_path):
+          tree+=f"{indent}- {directory_path}\n"
+          return tree 
+
+    tree+=f"{indent}+ {os.path.basename(directory_path)}\n" 
+
+    for item in os.listdir(directory_path):
+         item_path=os.path.join(directory_path,item)
+         if os.path.isdir(item_path):
+              tree+=build_tree(item_path,indent + '  ')
+         else:
+              tree+=f"{indent} - {item}\n"
+    
+    return tree 
+
 if __name__=='__main__':
-    generate_keys()
+    
+    print(build_tree('/home/suyash/pyaudit/src/uploads/CSP0'))
