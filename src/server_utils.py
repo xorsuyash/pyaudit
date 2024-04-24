@@ -37,6 +37,8 @@ def build_tree(directory_path,indent=''):
     
     return tree 
 
+def prepare_files():
+     pass 
 if __name__=='__main__':
     
     print(build_tree('/home/suyash/pyaudit/src/uploads/CSP0'))
